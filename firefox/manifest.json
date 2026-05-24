@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Kubernetes Owner Checker",
+  "version": "0.1.0",
+  "description": "Check if a GitHub user is an owner of any Kubernetes repositories",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "k8s-owner-checker@palnabarun"
+    }
+  },
+
+  "permissions": [],
+
+  "host_permissions": [
+    "https://github.com/*",
+    "https://cs.k8s.io/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
