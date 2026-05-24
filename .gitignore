@@ -1,0 +1,11 @@
+dist/
+
+chrome/content.js
+chrome/background.js
+chrome/styles.css
+chrome/icons/
+
+firefox/content.js
+firefox/background.js
+firefox/styles.css
+firefox/icons/
