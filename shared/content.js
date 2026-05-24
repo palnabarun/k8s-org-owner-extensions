@@ -16,35 +16,17 @@
         return pathParts[1];
     }
 
-    // Check if user is owner of any Kubernetes repositories using cs.k8s.io API
-    async function checkKubernetesOwnership(username) {
-        try {
-            // Use cs.k8s.io API to search for username in OWNERS files across Kubernetes repositories
-            const url = `https://cs.k8s.io/api/v1/search?stats=fosho&repos=*&rng=:20&q=${encodeURIComponent(username)}&i=fosho&files=OWNERS&excludeFiles=vendor/`;
-
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                throw new Error(`cs.k8s.io API error: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Check if any files were found (indicating ownership)
-            const isOwner = data.Stats && data.Stats.FilesOpened > 0;
-
-            return {
-                hasKubernetesRepos: isOwner,
-                filesFound: data.Stats?.FilesOpened || 0
-            };
-        } catch (error) {
-            console.error('Error checking Kubernetes ownership:', error);
-            return {
-                hasKubernetesRepos: false,
-                filesFound: 0,
-                error: error.message
-            };
-        }
+    // Check if user is owner of any Kubernetes repositories via background fetch
+    function checkKubernetesOwnership(username) {
+        return new Promise(resolve => {
+            chrome.runtime.sendMessage({ type: 'CHECK_OWNERSHIP', username }, response => {
+                if (chrome.runtime.lastError) {
+                    resolve({ hasKubernetesRepos: false, filesFound: 0, error: chrome.runtime.lastError.message });
+                } else {
+                    resolve(response);
+                }
+            });
+        });
     }
 
     // Create and display banner
@@ -116,7 +98,10 @@
             return;
         }
 
-        // Show loading banner
+        // Replace any existing banner with loading state
+        const existing = document.getElementById('k8s-owner-banner');
+        if (existing) existing.remove();
+
         const loadingBanner = document.createElement('div');
         loadingBanner.id = 'k8s-owner-banner';
         loadingBanner.className = 'k8s-banner loading';
