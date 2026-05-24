@@ -51,7 +51,7 @@
             `;
         } else if (ownershipData.hasKubernetesRepos) {
             banner.className += ' owner';
-            const searchUrl = `https://cs.k8s.io/api/v1/search?stats=fosho&repos=*&rng=:20&q=${encodeURIComponent(username)}&i=fosho&files=OWNERS&excludeFiles=vendor/`;
+            const searchUrl = `https://cs.k8s.io/?q=${encodeURIComponent(username)}&i=fosho&files=OWNERS&excludeFiles=vendor/`;
 
             banner.innerHTML = `
                 <div class="k8s-banner-content">
@@ -64,7 +64,7 @@
             `;
         } else {
             banner.className += ' not-owner';
-            const searchUrl = `https://cs.k8s.io/api/v1/search?stats=fosho&repos=*&rng=:20&q=${encodeURIComponent(username)}&i=fosho&files=OWNERS&excludeFiles=vendor/`;
+            const searchUrl = `https://cs.k8s.io/?q=${encodeURIComponent(username)}&i=fosho&files=OWNERS&excludeFiles=vendor/`;
 
             banner.innerHTML = `
                 <div class="k8s-banner-content">
